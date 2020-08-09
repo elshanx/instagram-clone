@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.app {
+  background-color: #fafafa;
+}
+
+.app__header {
+  object-fit: contain;
+  border-bottom: 1px lightgray;
+  display: flex;
+  padding: 20px;
+  background-color: white;
+  justify-content: space-between;
+}
+
+.app__logo {
+  width: 100px;
+  padding: 20px;
+  object-fit: contain;
+}
+
+.app__signup {
+  display: flex;
+  flex-direction: column;
+}
+
+.app__post {
+  display: flex;
+  padding: 20px;
+  justify-content: center;
+}
+
+.app__postLeft {
+  width: 40%;
+  height: 50%;
+}
