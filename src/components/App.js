@@ -42,23 +42,23 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged(authUser => {
+    const unsubscribe = auth.onAuthStateChanged(authUser => {
       if (authUser) {
         console.log(authUser);
         setUser(authUser);
       } else {
-        console.log('whoops');
         setUser(null);
       }
     });
+
     return () => {
-      unsub();
+      unsubscribe();
     };
   }, [user, username]);
 
   useEffect(() => {
     db.collection('posts')
-      .orderBy('timestamps', 'desc')
+      .orderBy('timestamp', 'desc')
       .onSnapshot(snapshot => {
         setPosts(
           snapshot.docs.map(doc => ({
@@ -69,21 +69,23 @@ const App = () => {
       });
   }, []);
 
-  const signUp = e => {
-    e.preventDefault();
+  const signUp = event => {
+    event.preventDefault();
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then(authUser =>
-        authUser.user.updateProfile({
+      .then(authUser => {
+        return authUser.user.updateProfile({
           displayName: username,
-        })
-      )
-      .catch(err => alert(err));
+        });
+      })
+      .catch(error => alert(error.message));
   };
 
-  const SignIn = e => {
-    e.preventDefault();
-    auth.signInWithEmailAndPassword(email, password).catch(err => alert(err));
+  const SignIn = event => {
+    event.preventDefault();
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .catch(error => alert(error.mesage));
 
     setOpenSignIn(false);
   };
@@ -92,30 +94,30 @@ const App = () => {
     <div className='app'>
       <Modal open={open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
-          <form className='app_signup'>
+          <form className='app___signup'>
             <center>
-              <img className='app_logo' src={instagram} alt='Instagram' />
+              <img className='app___logo' src={instagram} alt='Instagram' />
             </center>
 
             <Input
               placeholder='username'
               type='text'
               value={username}
-              onChange={e => setUsername(e.target.value)}
+              onChange={event => setUsername(event.target.value)}
             />
 
             <Input
               placeholder='email'
               type='text'
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={event => setEmail(event.target.value)}
             />
 
             <Input
               placeholder='password'
               type='password'
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={event => setPassword(event.target.value)}
             />
 
             <Button type='submit' onClick={signUp}>
@@ -127,9 +129,9 @@ const App = () => {
 
       <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
         <div style={modalStyle} className={classes.paper}>
-          <form className='app_signup'>
+          <form className='app__signup'>
             <center>
-              <img className='app_logo' src={instagram} alt='Instagram' />
+              <img className='app__logo' src={instagram} alt='Instagram' />
             </center>
 
             <Input
@@ -154,7 +156,7 @@ const App = () => {
       </Modal>
 
       <div className='app__header'>
-        <img className='app_logo' src={instagram} alt='Instagram' />
+        <img className='app__logo' src={instagram} alt='Instagram' />
 
         {user ? (
           <Button onClick={() => auth.signOut()}>Logout</Button>
@@ -170,6 +172,7 @@ const App = () => {
         <div className='app__postLeft'>
           {posts.map(({ post, id }) => (
             <Post
+              postId={id}
               key={id}
               username={post.username}
               user={user}
