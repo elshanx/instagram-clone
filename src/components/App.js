@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     width: 400,
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
+    border: '1px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
@@ -94,9 +94,9 @@ const App = () => {
     <div className='app'>
       <Modal open={open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
-          <form className='app___signup'>
+          <form className='app__signup'>
             <center>
-              <img className='app___logo' src={instagram} alt='Instagram' />
+              <img className='app__logo' src={instagram} alt='Instagram' />
             </center>
 
             <Input
@@ -168,8 +168,8 @@ const App = () => {
         )}
       </div>
 
-      <div className='app__post'>
-        <div className='app__postLeft'>
+      <div className='app__container'>
+        <main className='app__posts'>
           {posts.map(({ post, id }) => (
             <Post
               postId={id}
@@ -180,13 +180,13 @@ const App = () => {
               imageUrl={post.imageUrl}
             />
           ))}
-        </div>
+        </main>
       </div>
 
       {user?.displayName ? (
         <ImageUpload username={user.displayName} />
       ) : (
-        <h3>Sorry, you need to login to upload</h3>
+        <h3 className='login-to-upload'>Sorry, you need to login to upload</h3>
       )}
     </div>
   );

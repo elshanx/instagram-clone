@@ -7,6 +7,7 @@ import firebase from 'firebase';
 function Post({ postId, user, username, caption, imageUrl }) {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState('');
+  // const [timePosted, setTimePosted] = useState('');
 
   useEffect(() => {
     let unsubscribe;
@@ -15,7 +16,7 @@ function Post({ postId, user, username, caption, imageUrl }) {
         .collection('posts')
         .doc(postId)
         .collection('comments')
-        .orderBy('timestamp', 'desc')
+        .orderBy('timestamp', 'asc')
         .onSnapshot(snapshot => {
           setComments(snapshot.docs.map(doc => doc.data()));
         });
@@ -36,30 +37,31 @@ function Post({ postId, user, username, caption, imageUrl }) {
   };
 
   return (
-    <div>
-      <div className='post_header'>
-        <Avatar className='post_avatar' alt='Dexoangle' src={imageUrl} />
-        <h3>{username} </h3>
+    <div className='post'>
+      <div className='post__header'>
+        <Avatar className='post__avatar' alt={username} />
+        <h3 className='post__username'>{username} </h3>
       </div>
 
-      <img className='post_image' alt='logo' src={imageUrl} />
-      <h4 className='post_text'>
-        <strong>{username} </strong>
+      <img className='post__image' alt='logo' src={imageUrl} />
+      <div className='post__description'>
+        <span className='post__username'>{username} </span>
         {caption}{' '}
-      </h4>
+      </div>
 
-      <div className='post_comments'>
+      <div className='post__comments'>
         {comments.map(comment => (
-          <p>
-            <strong>{comment.username}</strong> {comment.text}
-          </p>
+          <div>
+            <span className='post__comments--username'>{comment.username}</span>{' '}
+            <span className='post__comments--text'>{comment.text}</span>
+          </div>
         ))}
       </div>
 
       {user && (
-        <form className='post_commentBox'>
+        <form className='post__commentBox'>
           <input
-            className='post_input'
+            className='post__input'
             type='text'
             placeholder='Add a Comment....'
             value={comment}
@@ -67,7 +69,7 @@ function Post({ postId, user, username, caption, imageUrl }) {
           />
 
           <button
-            className='post_Button'
+            className='post__button'
             disabled={!comment}
             type='submit'
             onClick={postComment}

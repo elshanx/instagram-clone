@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { storage, db } from '../firebase';
 import firebase from 'firebase';
-
 import '../styles/ImageUpload.css';
 
 function ImageUpload({ username }) {
@@ -10,7 +9,6 @@ function ImageUpload({ username }) {
   const [progress, setProgress] = useState(0);
   const [image, setImage] = useState(null);
 
-  //Uploads the first image only when multiple images are selected
   const handleChange = e => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
@@ -18,9 +16,9 @@ function ImageUpload({ username }) {
   };
 
   const handleUpload = () => {
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
+    if (!image) return alert('There is nothing to upload.');
 
-    //Progress Bar
+    const uploadTask = storage.ref(`images/${image.name}`).put(image);
     uploadTask.on(
       'state_changed',
       snapshot => {
@@ -33,14 +31,12 @@ function ImageUpload({ username }) {
         console.log(error);
         alert(error.message);
       },
-      //Complete upload function
       () => {
         storage
           .ref('images')
           .child(image.name)
           .getDownloadURL()
           .then(url => {
-            //post image into the database
             db.collection('posts').add({
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               caption: caption,
@@ -58,7 +54,6 @@ function ImageUpload({ username }) {
 
   return (
     <div className='imageUpload'>
-      <progress className='imageupload_progress' value={progress} max='100' />
       <input
         type='text'
         placeholder='Enter a caption.....'
@@ -67,6 +62,7 @@ function ImageUpload({ username }) {
       />
       <input type='file' onChange={handleChange} />
       <Button onClick={handleUpload}>Upload</Button>
+      <progress className='imageupload_progress' value={progress} max='100' />
     </div>
   );
 }
