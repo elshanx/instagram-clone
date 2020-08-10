@@ -3,8 +3,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
-    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .app {
@@ -12,6 +11,9 @@ body {
 }
 
 .app__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   object-fit: contain;
   border-bottom: 1px lightgray;
   display: flex;
